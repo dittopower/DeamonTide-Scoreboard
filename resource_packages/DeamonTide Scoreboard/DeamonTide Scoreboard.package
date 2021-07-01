@@ -1,0 +1,11 @@
+mod = [
+	"DeamonTide Scoreboard"
+]
+
+package = [
+	"resource_packages/DeamonTide Scoreboard/DeamonTide Scoreboard"
+]
+
+lua = [
+	"scripts/mods/DeamonTide Scoreboard/*"
+]
