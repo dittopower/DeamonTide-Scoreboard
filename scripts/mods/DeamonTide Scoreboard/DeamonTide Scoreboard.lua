@@ -13,7 +13,7 @@ mod:hook("Localize", function (func, id, ...)
 		return "Berzerkers Killed"
 	end
 	if id == "scoreboard_topic_chaos_warrior" then
-		return "Choas Warriors Killed"
+		return "Chaos Warriors Killed"
 	end
 	if id == "scoreboard_topic_bestigor" then
 		return "Bestigors Killed"
