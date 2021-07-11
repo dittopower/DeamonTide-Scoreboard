@@ -218,9 +218,9 @@ mod.intial_draw_sizes = {}
 mod:hook(EndViewStateScore, "draw", function(func, self, ...)
 	mod:pcall(function()
 		local row_size = 30
-		local size_delta = total_extra_rows * row_size
+		local size_delta = mod.total_extra_rows * row_size
 		
-		local total_rows = 12 + total_extra_rows
+		local total_rows = 12 + mod.total_extra_rows
 		local total_size = total_rows * row_size;
 
 		local modifier = 5
