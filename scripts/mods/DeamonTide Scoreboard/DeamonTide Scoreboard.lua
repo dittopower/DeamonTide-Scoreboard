@@ -204,8 +204,10 @@ mod.extended_stats = {
 		end
 	}
 }
+mod.total_extra_rows = 0
 
 mod:pcall(function()
+	mod.total_extra_rows = 0
 	for index, extended_stat in pairs(mod.extended_stats) do
 		if not tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
 			return scoreboard_topic_stat.name == extended_stat.name
@@ -224,6 +226,7 @@ mod:pcall(function()
 				name = extended_stat.name
 			}
 		end
+		mod.total_extra_rows = mod.total_extra_rows + 1
 	end
 end)
 
@@ -231,11 +234,10 @@ mod.intial_draw_sizes = {}
 -- Redraw the table?
 mod:hook(EndViewStateScore, "draw", function(func, self, ...)
 	mod:pcall(function()
-		local extra_rows = table.getn(mod.extended_stats)
 		local row_size = 30
-		local size_delta = extra_rows * row_size
+		local size_delta = total_extra_rows * row_size
 		
-		local total_rows = 12 + extra_rows
+		local total_rows = 12 + total_extra_rows
 		local total_size = total_rows * row_size;
 
 		local modifier = 5
@@ -247,10 +249,7 @@ mod:hook(EndViewStateScore, "draw", function(func, self, ...)
 		-- Player columns
 		for i = 1, 4 do
 			self._hero_widgets[i].offset[2] = size_delta
-			-- mod:echo( i .. ": " .. "_score_widgets: " .. i)
 			local sw = self._score_widgets[i]
-			-- mod:echo( i .. ": " .. "offset[1]: " .. sw.offset[1])
-			-- mod:echo( i .. ": " .. "offset[2]: " .. sw.offset[2])
 			sw.offset[1] = -0
 			sw.offset[2] = size_delta
 
