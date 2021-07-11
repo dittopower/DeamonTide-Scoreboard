@@ -18,6 +18,27 @@ mod:hook("Localize", function (func, id, ...)
 	if id == "scoreboard_topic_bestigor" then
 		return "Bestigors Killed"
 	end
+	if id == "scoreboard_topic_gutter_runner" then
+		return "Gutter Runners Killed"
+	end
+	if id == "scoreboard_topic_globadier" then
+		return "Globadiers Killed"
+	end
+	if id == "scoreboard_topic_pack_master" then
+		return "Pack Masters Killed"
+	end
+	if id == "scoreboard_topic_ratling_gunner" then
+		return "Ratling Gunners Killed"
+	end
+	if id == "scoreboard_topic_warpfire_thrower" then
+		return "Warpfire Throwers Killed"
+	end
+	if id == "scoreboard_topic_chaos_sorcerer" then
+		return "Chaos Sorcerers Killed"
+	end
+	if id == "scoreboard_topic_standard_bearer" then
+		return "Beastmen Standard Bearers Killed"
+	end
 	return func(id, ...)
 end)
 
@@ -86,10 +107,103 @@ mod.extended_stats = {
 		sort_function = function (a, b)
 			return b.score < a.score
 		end
+	},
+	{
+		name = "kills_gutter_runner",
+		display_text = "scoreboard_topic_gutter_runner",
+		stat_types = {
+			{
+				"kills_per_breed",
+				"skaven_gutter_runner"
+			}
+		},
+		sort_function = function (a, b)
+			return b.score < a.score
+		end
+	},
+	{
+		name = "kills_globadier",
+		display_text = "scoreboard_topic_globadier",
+		stat_types = {
+			{
+				"kills_per_breed",
+				"skaven_poison_wind_globadier"
+			}
+		},
+		sort_function = function (a, b)
+			return b.score < a.score
+		end
+	},
+	{
+		name = "kills_pack_master",
+		display_text = "scoreboard_topic_pack_master",
+		stat_types = {
+			{
+				"kills_per_breed",
+				"skaven_pack_master"
+			}
+		},
+		sort_function = function (a, b)
+			return b.score < a.score
+		end
+	},
+	{
+		name = "kills_ratling_gunner",
+		display_text = "scoreboard_topic_ratling_gunner",
+		stat_types = {
+			{
+				"kills_per_breed",
+				"skaven_ratling_gunner"
+			}
+		},
+		sort_function = function (a, b)
+			return b.score < a.score
+		end
+	},
+	{
+		name = "kills_warpfire_thrower",
+		display_text = "scoreboard_topic_warpfire_thrower",
+		stat_types = {
+			{
+				"kills_per_breed",
+				"skaven_warpfire_thrower"
+			}
+		},
+		sort_function = function (a, b)
+			return b.score < a.score
+		end
+	},
+	{
+		name = "kills_chaos_sorcerer",
+		display_text = "scoreboard_topic_chaos_sorcerer",
+		stat_types = {
+			{
+				"kills_per_breed",
+				"chaos_corruptor_sorcerer"
+			},
+			{
+				"kills_per_breed",
+				"chaos_vortex_sorcerer"
+			}
+		},
+		sort_function = function (a, b)
+			return b.score < a.score
+		end
+	},
+	{
+		name = "kills_standard_bearer",
+		display_text = "scoreboard_topic_standard_bearer",
+		stat_types = {
+			{
+				"kills_per_breed",
+				"beastmen_standard_bearer"
+			}
+		},
+		sort_function = function (a, b)
+			return b.score < a.score
+		end
 	}
 }
-
-
 
 mod:pcall(function()
 	for index, extended_stat in pairs(mod.extended_stats) do
