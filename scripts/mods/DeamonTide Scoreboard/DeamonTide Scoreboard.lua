@@ -42,6 +42,11 @@ mod:hook("Localize", function (func, id, ...)
 	return func(id, ...)
 end)
 
+-- Declare re-usable sort function
+mod.sort_function_greater = function (a, b)
+	return b.score < a.score
+end
+
 -- Types kill kills to count
 mod.extended_stats = {
 	{
@@ -61,9 +66,7 @@ mod.extended_stats = {
 				"skaven_storm_vermin_with_shield"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_berzerker",
@@ -78,9 +81,7 @@ mod.extended_stats = {
 				"chaos_berzerker"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_chaos_warrior",
@@ -91,9 +92,7 @@ mod.extended_stats = {
 				"chaos_warrior"
 			},
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_bestigor",
@@ -104,9 +103,7 @@ mod.extended_stats = {
 				"beastmen_bestigor"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_gutter_runner",
@@ -117,9 +114,7 @@ mod.extended_stats = {
 				"skaven_gutter_runner"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_globadier",
@@ -130,9 +125,7 @@ mod.extended_stats = {
 				"skaven_poison_wind_globadier"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_pack_master",
@@ -143,9 +136,7 @@ mod.extended_stats = {
 				"skaven_pack_master"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_ratling_gunner",
@@ -156,9 +147,7 @@ mod.extended_stats = {
 				"skaven_ratling_gunner"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_warpfire_thrower",
@@ -169,9 +158,7 @@ mod.extended_stats = {
 				"skaven_warpfire_thrower"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_chaos_sorcerer",
@@ -186,9 +173,7 @@ mod.extended_stats = {
 				"chaos_vortex_sorcerer"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	},
 	{
 		name = "kills_standard_bearer",
@@ -199,9 +184,7 @@ mod.extended_stats = {
 				"beastmen_standard_bearer"
 			}
 		},
-		sort_function = function (a, b)
-			return b.score < a.score
-		end
+		sort_function = mod.sort_function_greater
 	}
 }
 mod.total_extra_rows = 0
