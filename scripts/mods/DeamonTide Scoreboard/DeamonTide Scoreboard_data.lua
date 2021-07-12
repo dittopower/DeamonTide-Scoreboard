@@ -38,7 +38,7 @@ return {
 				title         = "kills_bestigor_opt",
 				tooltip       = "kills_bestigor_opt_tip",
 				type          = "checkbox",
-				default_value = true,
+				default_value = false,
 			},
 			{
 				setting_id    = "kills_gutter_runner",
@@ -52,7 +52,7 @@ return {
 				title         = "kills_globadier_opt",
 				tooltip       = "kills_globadier_opt_tip",
 				type          = "checkbox",
-				default_value = true,
+				default_value = false,
 			},
 			{
 				setting_id    = "kills_pack_master",
@@ -73,7 +73,7 @@ return {
 				title         = "kills_warpfire_thrower_opt",
 				tooltip       = "kills_warpfire_thrower_opt_tip",
 				type          = "checkbox",
-				default_value = true,
+				default_value = false,
 			},
 			{
 				setting_id    = "kills_chaos_sorcerer",
@@ -87,7 +87,7 @@ return {
 				title         = "kills_standard_bearer_opt",
 				tooltip       = "kills_standard_bearer_opt_tip",
 				type          = "checkbox",
-				default_value = true,
+				default_value = false,
 			},
 		  }
 		},
