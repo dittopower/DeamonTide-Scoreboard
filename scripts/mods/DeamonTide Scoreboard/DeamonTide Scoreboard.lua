@@ -8,35 +8,25 @@ local tablex = require'pl.tablex'
 mod:hook("Localize", function (func, id, ...)
 	if id == "scoreboard_topic_storm_vermin" then
 		return "Storm Vermin Killed"
-	end
-	if id == "scoreboard_topic_berzerker" then
+	elseif id == "scoreboard_topic_berzerker" then
 		return "Berzerkers Killed"
-	end
-	if id == "scoreboard_topic_chaos_warrior" then
+	elseif id == "scoreboard_topic_chaos_warrior" then
 		return "Chaos Warriors Killed"
-	end
-	if id == "scoreboard_topic_bestigor" then
+	elseif id == "scoreboard_topic_bestigor" then
 		return "Bestigors Killed"
-	end
-	if id == "scoreboard_topic_gutter_runner" then
+	elseif id == "scoreboard_topic_gutter_runner" then
 		return "Gutter Runners Killed"
-	end
-	if id == "scoreboard_topic_globadier" then
+	elseif id == "scoreboard_topic_globadier" then
 		return "Globadiers Killed"
-	end
-	if id == "scoreboard_topic_pack_master" then
+	elseif id == "scoreboard_topic_pack_master" then
 		return "Pack Masters Killed"
-	end
-	if id == "scoreboard_topic_ratling_gunner" then
+	elseif id == "scoreboard_topic_ratling_gunner" then
 		return "Ratling Gunners Killed"
-	end
-	if id == "scoreboard_topic_warpfire_thrower" then
+	elseif id == "scoreboard_topic_warpfire_thrower" then
 		return "Warpfire Throwers Killed"
-	end
-	if id == "scoreboard_topic_chaos_sorcerer" then
+	elseif id == "scoreboard_topic_chaos_sorcerer" then
 		return "Chaos Sorcerers Killed"
-	end
-	if id == "scoreboard_topic_standard_bearer" then
+	elseif id == "scoreboard_topic_standard_bearer" then
 		return "Beastmen Standard Bearers Killed"
 	end
 	return func(id, ...)
