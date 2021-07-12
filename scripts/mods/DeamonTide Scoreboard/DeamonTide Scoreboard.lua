@@ -208,20 +208,24 @@ mod.registerStat = function(newStat)
 end
 
 mod.unregisterStat = function(oldStatName)
-	if tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
+	-- mod:echo("Remove "..oldStatName)
+
+	indexa, reta = tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
 		return scoreboard_topic_stat.name == oldStatName
-	end) then
-		-- table.remove(ScoreboardHelper.scoreboard_topic_stats, )
-	end
-	if tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
-		return name == oldStatName
-	end) then
-		-- table.remove(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, )
+	end)
+	if reta then
+		table.remove(ScoreboardHelper.scoreboard_topic_stats, indexa)
 	end
 
-	if StatisticsDefinitions.player[oldStatName] then
-		StatisticsDefinitions.player.remove(oldStatName)
-		-- StatisticsDefinitions.player[oldStatName] = nil
+	indexb, retb = tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
+		return name == oldStatName
+	end)
+	if retb then
+		table.remove(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, indexb)
+	end
+
+	if not (not StatisticsDefinitions.player[oldStatName]) then
+		StatisticsDefinitions.player[oldStatName] = nil
 	end
 	-- mod.total_extra_rows = mod.total_extra_rows - 1
 end
