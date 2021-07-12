@@ -179,27 +179,54 @@ mod.extended_stats = {
 }
 mod.total_extra_rows = 0
 
+mod.registerStat = function(newStat)
+	if not tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
+		return scoreboard_topic_stat.name == newStat.name
+	end) then
+		table.insert(ScoreboardHelper.scoreboard_topic_stats, newStat)
+	end
+	if not tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
+		return name == newStat.name
+	end) then
+		table.insert(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, newStat.name)
+	end
+
+	if not StatisticsDefinitions.player[newStat.name] then
+		StatisticsDefinitions.player[newStat.name] = {
+			value = 0,
+			name = newStat.name
+		}
+	end
+	mod.total_extra_rows = mod.total_extra_rows + 1
+end
+
+mod.unregisterStat = function(oldStatName)
+	if tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
+		return scoreboard_topic_stat.name == oldStatName
+	end) then
+		-- table.remove(ScoreboardHelper.scoreboard_topic_stats, )
+	end
+	if tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
+		return name == oldStatName
+	end) then
+		-- table.remove(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, )
+	end
+
+	if StatisticsDefinitions.player[oldStatName] then
+		StatisticsDefinitions.player.remove(oldStatName)
+		-- StatisticsDefinitions.player[oldStatName] = nil
+	end
+	-- mod.total_extra_rows = mod.total_extra_rows - 1
+end
+
 mod:pcall(function()
 	mod.total_extra_rows = 0
 	for index, extended_stat in pairs(mod.extended_stats) do
-		if not tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
-			return scoreboard_topic_stat.name == extended_stat.name
-		end) then
-			table.insert(ScoreboardHelper.scoreboard_topic_stats, extended_stat)
+		if (mod:get(extended_stat.name)) then
+			mod.registerStat(extended_stat)
+		else
+			mod.unregisterStat(extended_stat.name)
 		end
-		if not tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
-			return name == extended_stat.name
-		end) then
-			table.insert(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, extended_stat.name)
-		end
-
-		if not StatisticsDefinitions.player[extended_stat.name] then
-			StatisticsDefinitions.player[extended_stat.name] = {
-				value = 0,
-				name = extended_stat.name
-			}
-		end
-		mod.total_extra_rows = mod.total_extra_rows + 1
 	end
 end)
 
