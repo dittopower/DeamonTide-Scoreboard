@@ -6,28 +6,8 @@ local tablex = require'pl.tablex'
 
 -- UI Strings
 mod:hook("Localize", function (func, id, ...)
-	if id == "scoreboard_topic_storm_vermin" then
-		return "Storm Vermin Killed"
-	elseif id == "scoreboard_topic_berzerker" then
-		return "Berzerkers Killed"
-	elseif id == "scoreboard_topic_chaos_warrior" then
-		return "Chaos Warriors Killed"
-	elseif id == "scoreboard_topic_bestigor" then
-		return "Bestigors Killed"
-	elseif id == "scoreboard_topic_gutter_runner" then
-		return "Gutter Runners Killed"
-	elseif id == "scoreboard_topic_globadier" then
-		return "Globadiers Killed"
-	elseif id == "scoreboard_topic_pack_master" then
-		return "Pack Masters Killed"
-	elseif id == "scoreboard_topic_ratling_gunner" then
-		return "Ratling Gunners Killed"
-	elseif id == "scoreboard_topic_warpfire_thrower" then
-		return "Warpfire Throwers Killed"
-	elseif id == "scoreboard_topic_chaos_sorcerer" then
-		return "Chaos Sorcerers Killed"
-	elseif id == "scoreboard_topic_standard_bearer" then
-		return "Beastmen Standard Bearers Killed"
+	if string.find(id, "deamontide_") then
+		return mod:localize(id)
 	end
 	return func(id, ...)
 end)
@@ -41,7 +21,7 @@ end
 mod.extended_stats = {
 	{
 		name = "kills_storm_vermin",
-		display_text = "scoreboard_topic_storm_vermin",
+		display_text = "deamontide_score_storm_vermin",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -60,7 +40,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_berzerker",
-		display_text = "scoreboard_topic_berzerker",
+		display_text = "deamontide_score_berzerker",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -75,7 +55,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_chaos_warrior",
-		display_text = "scoreboard_topic_chaos_warrior",
+		display_text = "deamontide_score_chaos_warrior",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -86,7 +66,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_bestigor",
-		display_text = "scoreboard_topic_bestigor",
+		display_text = "deamontide_score_bestigor",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -97,7 +77,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_gutter_runner",
-		display_text = "scoreboard_topic_gutter_runner",
+		display_text = "deamontide_score_gutter_runner",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -108,7 +88,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_globadier",
-		display_text = "scoreboard_topic_globadier",
+		display_text = "deamontide_score_globadier",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -119,7 +99,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_pack_master",
-		display_text = "scoreboard_topic_pack_master",
+		display_text = "deamontide_score_pack_master",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -130,7 +110,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_ratling_gunner",
-		display_text = "scoreboard_topic_ratling_gunner",
+		display_text = "deamontide_score_ratling_gunner",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -141,7 +121,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_warpfire_thrower",
-		display_text = "scoreboard_topic_warpfire_thrower",
+		display_text = "deamontide_score_warpfire_thrower",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -152,7 +132,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_chaos_sorcerer",
-		display_text = "scoreboard_topic_chaos_sorcerer",
+		display_text = "deamontide_score_chaos_sorcerer",
 		stat_types = {
 			{
 				"kills_per_breed",
@@ -167,7 +147,7 @@ mod.extended_stats = {
 	},
 	{
 		name = "kills_standard_bearer",
-		display_text = "scoreboard_topic_standard_bearer",
+		display_text = "deamontide_score_standard_bearer",
 		stat_types = {
 			{
 				"kills_per_breed",
