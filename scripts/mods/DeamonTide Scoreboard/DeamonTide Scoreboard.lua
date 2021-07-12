@@ -180,24 +180,31 @@ mod.extended_stats = {
 mod.total_extra_rows = 0
 
 mod.registerStat = function(newStat)
-	if not tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
-		return scoreboard_topic_stat.name == newStat.name
-	end) then
-		table.insert(ScoreboardHelper.scoreboard_topic_stats, newStat)
+	if mod.total_extra_rows == 8 then
+		mod:warn("Vermintide 2 only allows up to 8 additions to the scoreboard, if any other mods add to it, your game will crash! Consider Disabling some DeamonTide Scoreboard catagories.")
 	end
-	if not tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
-		return name == newStat.name
-	end) then
-		table.insert(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, newStat.name)
-	end
+	if mod.total_extra_rows <= 8 then
+		if not tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
+			return scoreboard_topic_stat.name == newStat.name
+		end) then
+			table.insert(ScoreboardHelper.scoreboard_topic_stats, newStat)
+		end
+		if not tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
+			return name == newStat.name
+		end) then
+			table.insert(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, newStat.name)
+		end
 
-	if not StatisticsDefinitions.player[newStat.name] then
-		StatisticsDefinitions.player[newStat.name] = {
-			value = 0,
-			name = newStat.name
-		}
+		if not StatisticsDefinitions.player[newStat.name] then
+			StatisticsDefinitions.player[newStat.name] = {
+				value = 0,
+				name = newStat.name
+			}
+		end
+		mod.total_extra_rows = mod.total_extra_rows + 1
+	else
+		mod:error("Exceeded Maximum 8 additions to the scoreboard... Skipping adding")
 	end
-	mod.total_extra_rows = mod.total_extra_rows + 1
 end
 
 mod.unregisterStat = function(oldStatName)
