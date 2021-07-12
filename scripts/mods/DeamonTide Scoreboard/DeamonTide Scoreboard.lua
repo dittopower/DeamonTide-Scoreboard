@@ -214,7 +214,7 @@ end
 mod:pcall(function()
 	mod.total_extra_rows = 0
 	for index, extended_stat in pairs(mod.extended_stats) do
-		if (mod:get(extended_stat.name)) then
+		if (mod:get("deamontide_"..extended_stat.name)) then
 			mod.registerStat(extended_stat)
 		else
 			mod.unregisterStat(extended_stat.name)
