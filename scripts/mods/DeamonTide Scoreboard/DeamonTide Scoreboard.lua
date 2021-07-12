@@ -180,8 +180,9 @@ mod.extended_stats = {
 mod.total_extra_rows = 0
 
 mod.registerStat = function(newStat)
-	if mod.total_extra_rows == 8 then
-		mod:warn("Vermintide 2 only allows up to 8 additions to the scoreboard, if any other mods add to it, your game will crash! Consider Disabling some DeamonTide Scoreboard catagories.")
+	-- mod:echo("Add "..newStat.name)
+	if mod.total_extra_rows >= 8 then
+		mod:warning("Vermintide 2 only allows up to 8 additions to the scoreboard, if any other mods add to it, your game will crash! Consider Disabling some DeamonTide Scoreboard catagories.")
 	end
 	if mod.total_extra_rows <= 8 then
 		if not tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
