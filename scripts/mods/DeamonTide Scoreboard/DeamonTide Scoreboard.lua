@@ -6,18 +6,19 @@ local tablex = require'pl.tablex'
 
 -- UI Strings
 mod:hook("Localize", function (func, id, ...)
+	-- If from this mod, use this mod's localisations file
 	if string.find(id, "deamontide_") then
 		return mod:localize(id)
 	end
 	return func(id, ...)
 end)
 
--- Declare re-usable sort function
+-- Declare re-usable sort function for scoreboard rankings
 mod.sort_function_greater = function (a, b)
 	return b.score < a.score
 end
 
--- Types kill kills to count
+-- pre-define scoreboard entries for later registration
 mod.extended_stats = {
 	{
 		name = "kills_storm_vermin",
@@ -170,6 +171,7 @@ mod.registerStat = function(newStat)
 		end) then
 			table.insert(ScoreboardHelper.scoreboard_topic_stats, newStat)
 		end
+
 		if not tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
 			return name == newStat.name
 		end) then
@@ -190,7 +192,6 @@ end
 
 mod.unregisterStat = function(oldStatName)
 	-- mod:echo("Remove "..oldStatName)
-
 	indexa, reta = tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
 		return scoreboard_topic_stat.name == oldStatName
 	end)
@@ -211,6 +212,7 @@ mod.unregisterStat = function(oldStatName)
 	-- mod.total_extra_rows = mod.total_extra_rows - 1
 end
 
+-- Check mod options and update registered scoreboard entries
 mod:pcall(function()
 	mod.total_extra_rows = 0
 	for index, extended_stat in pairs(mod.extended_stats) do
@@ -223,7 +225,7 @@ mod:pcall(function()
 end)
 
 mod.intial_draw_sizes = {}
--- Redraw the table?
+-- Redraw the table
 mod:hook(EndViewStateScore, "draw", function(func, self, ...)
 	mod:pcall(function()
 		local row_size = 30
