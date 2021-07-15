@@ -183,7 +183,21 @@ mod.getStat = function(peer_id, local_player_id, stats_id, entry_id)
 	return 0
 end
 
+-- Check mod options and update scoreboard entry visibility
+mod.toggleStats = function ()
+	if scoreboard_extension then
+		for index, extended_stat in pairs(mod.extended_stats) do
+			if (mod:get("deamontide_"..extended_stat.name)) then
+				scoreboard_extension:set_entry(extended_stat.name, true)
+			else
+				scoreboard_extension:set_entry(extended_stat.name, false)
+			end
+		end
+	end
+end
+
 mod.recordedStats = {}
+-- Once all mods are loaded register scoreboard additions via scoreboard_extension mod
 mod.on_all_mods_loaded = function ()
 	scoreboard_extension = get_mod("scoreboard_extension")
 	if scoreboard_extension then
@@ -209,19 +223,13 @@ mod.on_all_mods_loaded = function ()
 			end
 		end
 	end
+
+	mod.toggleStats()
 end
 
--- Check mod options and update registered scoreboard entries
+-- Update visability 
 mod.on_setting_changed = function ()
-	if scoreboard_extension then
-		for index, extended_stat in pairs(mod.extended_stats) do
-			if (mod:get("deamontide_"..extended_stat.name)) then
-				scoreboard_extension:set_entry(extended_stat.name, true)
-			else
-				scoreboard_extension:set_entry(extended_stat.name, false)
-			end
-		end
-	end
+	mod.toggleStats()
 end
 
 -- Load scores into local variables at end of game
