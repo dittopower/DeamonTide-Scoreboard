@@ -170,33 +170,59 @@ mod.extended_stats = {
 	}
 }
 
+-- Array to store stats
+mod.recordedStats = {}
+
+-- function for scoreboard to get stat
 mod.getStat = function(peer_id, local_player_id, stats_id, entry_id)
-	mod:echo("peer_id"..peer_id)
-	mod:echo("local_player_id"..local_player_id)
-	mod:echo("stats_id"..stats_id)
-	mod:echo("entry_id"..entry_id)
-	if mod.recordedStats[peer_id] then
-		if mod.recordedStats[peer_id][entry_id] then
-			return mod.recordedStats[peer_id][entry_id]
+	local id = mod.simplifyStatId(stats_id)
+	if mod.recordedStats[id] then
+		if mod.recordedStats[id][entry_id] then
+			return mod.recordedStats[id][entry_id] or 0
 		end
 	end
 	return 0
 end
 
+mod.simplifyStatId = function (inputstr)
+	return string.gsub(inputstr, "[^:]+:", "")
+end
+
+-- Load scores into recordedStats at end of game
+mod:hook(EndViewStateScore, "_setup_player_scores", function(func, self, players_session_scores)
+	if pcall(function ()
+		local i = 1
+		for index, player_data in pairs(players_session_scores) do
+			local id = mod.simplifyStatId(index)
+			if not mod.recordedStats[id] then
+				mod.recordedStats[id] = {}
+			end
+			for _, statData in pairs(mod.extended_stats) do
+				mod.recordedStats[id][statData.name] = player_data[statData.name] or 0
+			end
+			i = i + 1
+		end
+	end) then
+		mod:echo("_setup_player_scores ok")
+	else
+		mod:echo("_setup_player_scores ko")
+	end
+	return func(self, players_session_scores)
+end)
+
 -- Check mod options and update scoreboard entry visibility
 mod.toggleStats = function ()
 	if scoreboard_extension then
-		for index, extended_stat in pairs(mod.extended_stats) do
-			if (mod:get("deamontide_"..extended_stat.name)) then
-				scoreboard_extension:set_entry(extended_stat.name, true)
+		for _, statData in pairs(mod.extended_stats) do
+			if (mod:get("deamontide_"..statData.name)) then
+				scoreboard_extension:set_entry(statData.name, true)
 			else
-				scoreboard_extension:set_entry(extended_stat.name, false)
+				scoreboard_extension:set_entry(statData.name, false)
 			end
 		end
 	end
 end
 
-mod.recordedStats = {}
 -- Once all mods are loaded register scoreboard additions via scoreboard_extension mod
 mod.on_all_mods_loaded = function ()
 	scoreboard_extension = get_mod("scoreboard_extension")
@@ -214,16 +240,10 @@ mod.on_all_mods_loaded = function ()
 				table.insert(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, statData.name)
 			end
 
+		for _, statData in pairs(mod.extended_stats) do
 			local created = scoreboard_extension:register_entry(statData.name, mod:localize(statData.display_text), statData.statData, mod.getStat)
 		end
-		for i=1, 4 do
-			mod.recordedStats[i] = {}
-			for index, statData in pairs(mod.extended_stats) do
-				mod.recordedStats[i][statData.name] = 0
-			end
-		end
 	end
-
 	mod.toggleStats()
 end
 
@@ -231,16 +251,3 @@ end
 mod.on_setting_changed = function ()
 	mod.toggleStats()
 end
-
--- Load scores into local variables at end of game
-mod:hook(EndViewStateScore, "_setup_player_scores", function(func, self, players_session_scores)
-	mod.stats_by_index = {}
-	local index = 1
-	for _, player_data in pairs(players_session_scores) do
-		for index, statData in pairs(mod.extended_stats) do
-			mod.recordedStats[i][statData.name] = player_data[statData.name]
-		end
-		index = index + 1
-	end
-	return func(self, players_session_scores)
-end)
