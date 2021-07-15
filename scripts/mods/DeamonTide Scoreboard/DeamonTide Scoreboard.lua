@@ -1,5 +1,5 @@
 local mod = get_mod("DeamonTide Scoreboard")
-
+local scoreboard_extension = nil
 -- Global imports
 local pl = require'pl.import_into'()
 local tablex = require'pl.tablex'
@@ -37,7 +37,8 @@ mod.extended_stats = {
 				"skaven_storm_vermin_with_shield"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_berzerker",
@@ -52,7 +53,8 @@ mod.extended_stats = {
 				"chaos_berzerker"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_chaos_warrior",
@@ -63,7 +65,8 @@ mod.extended_stats = {
 				"chaos_warrior"
 			},
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_bestigor",
@@ -74,7 +77,8 @@ mod.extended_stats = {
 				"beastmen_bestigor"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_gutter_runner",
@@ -85,7 +89,8 @@ mod.extended_stats = {
 				"skaven_gutter_runner"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_globadier",
@@ -96,7 +101,8 @@ mod.extended_stats = {
 				"skaven_poison_wind_globadier"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_pack_master",
@@ -107,7 +113,8 @@ mod.extended_stats = {
 				"skaven_pack_master"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_ratling_gunner",
@@ -118,7 +125,8 @@ mod.extended_stats = {
 				"skaven_ratling_gunner"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_warpfire_thrower",
@@ -129,7 +137,8 @@ mod.extended_stats = {
 				"skaven_warpfire_thrower"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_chaos_sorcerer",
@@ -144,7 +153,8 @@ mod.extended_stats = {
 				"chaos_vortex_sorcerer"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	},
 	{
 		name = "kills_standard_bearer",
@@ -155,131 +165,74 @@ mod.extended_stats = {
 				"beastmen_standard_bearer"
 			}
 		},
-		sort_function = mod.sort_function_greater
+		sort_function = mod.sort_function_greater,
+		sort_order = "highest"
 	}
 }
-mod.total_extra_rows = 0
 
-mod.registerStat = function(newStat)
-	-- mod:echo("Add "..newStat.name)
-	if mod.total_extra_rows >= 8 then
-		mod:warning("Vermintide 2 only allows up to 8 additions to the scoreboard, if any other mods add to it, your game will crash! Consider Disabling some DeamonTide Scoreboard catagories.")
+mod.getStat = function(peer_id, local_player_id, stats_id, entry_id)
+	mod:echo("peer_id"..peer_id)
+	mod:echo("local_player_id"..local_player_id)
+	mod:echo("stats_id"..stats_id)
+	mod:echo("entry_id"..entry_id)
+	if mod.recordedStats[peer_id] then
+		if mod.recordedStats[peer_id][entry_id] then
+			return mod.recordedStats[peer_id][entry_id]
+		end
 	end
-	if mod.total_extra_rows <= 8 then
-		if not tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
-			return scoreboard_topic_stat.name == newStat.name
-		end) then
-			table.insert(ScoreboardHelper.scoreboard_topic_stats, newStat)
-		end
-
-		if not tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
-			return name == newStat.name
-		end) then
-			table.insert(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, newStat.name)
-		end
-
-		if not StatisticsDefinitions.player[newStat.name] then
-			StatisticsDefinitions.player[newStat.name] = {
-				value = 0,
-				name = newStat.name
-			}
-		end
-		mod.total_extra_rows = mod.total_extra_rows + 1
-	else
-		mod:error("Exceeded Maximum 8 additions to the scoreboard... Skipping adding")
-	end
+	return 0
 end
 
-mod.unregisterStat = function(oldStatName)
-	-- mod:echo("Remove "..oldStatName)
-	indexa, reta = tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
-		return scoreboard_topic_stat.name == oldStatName
-	end)
-	if reta then
-		table.remove(ScoreboardHelper.scoreboard_topic_stats, indexa)
-	end
+mod.recordedStats = {}
+mod.on_all_mods_loaded = function ()
+	scoreboard_extension = get_mod("scoreboard_extension")
+	if scoreboard_extension then
+		for index, statData in pairs(mod.extended_stats) do
+			if not tablex.find_if(ScoreboardHelper.scoreboard_topic_stats, function(scoreboard_topic_stat)
+				return scoreboard_topic_stat.name == statData.name
+			end) then
+				table.insert(ScoreboardHelper.scoreboard_topic_stats, statData)
+			end
 
-	indexb, retb = tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
-		return name == oldStatName
-	end)
-	if retb then
-		table.remove(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, indexb)
-	end
+			if not tablex.find_if(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, function(name)
+				return name == statData.name
+			end) then
+				table.insert(ScoreboardHelper.scoreboard_grouped_topic_stats[1].stats, statData.name)
+			end
 
-	if not (not StatisticsDefinitions.player[oldStatName]) then
-		StatisticsDefinitions.player[oldStatName] = nil
+			local created = scoreboard_extension:register_entry(statData.name, mod:localize(statData.display_text), statData.statData, mod.getStat)
+		end
+		for i=1, 4 do
+			mod.recordedStats[i] = {}
+			for index, statData in pairs(mod.extended_stats) do
+				mod.recordedStats[i][statData.name] = 0
+			end
+		end
 	end
-	-- mod.total_extra_rows = mod.total_extra_rows - 1
 end
 
 -- Check mod options and update registered scoreboard entries
-mod:pcall(function()
-	mod.total_extra_rows = 0
-	for index, extended_stat in pairs(mod.extended_stats) do
-		if (mod:get("deamontide_"..extended_stat.name)) then
-			mod.registerStat(extended_stat)
-		else
-			mod.unregisterStat(extended_stat.name)
+mod.on_setting_changed = function ()
+	if scoreboard_extension then
+		for index, extended_stat in pairs(mod.extended_stats) do
+			if (mod:get("deamontide_"..extended_stat.name)) then
+				scoreboard_extension:set_entry(extended_stat.name, true)
+			else
+				scoreboard_extension:set_entry(extended_stat.name, false)
+			end
 		end
 	end
-end)
+end
 
-mod.intial_draw_sizes = {}
--- Redraw the table
-mod:hook(EndViewStateScore, "draw", function(func, self, ...)
-	mod:pcall(function()
-		local row_size = 30
-		local size_delta = mod.total_extra_rows * row_size
-		
-		local total_rows = 12 + mod.total_extra_rows
-		local total_size = total_rows * row_size;
-
-		local modifier = 5
-		local frame_off_modifier = -modifier
-		local glass_off_modifier = -2.5 * modifier
-
-		local hero_widget_size = 7 * row_size
-
-		-- Player columns
-		for i = 1, 4 do
-			self._hero_widgets[i].offset[2] = size_delta
-			local sw = self._score_widgets[i]
-			sw.offset[1] = -0
-			sw.offset[2] = size_delta
-
-			sw.style.background_left_glow.offset[2] = -size_delta
-			sw.style.background_right_glow.offset[2] = -size_delta
-			sw.style.background.offset[2] = -modifier - size_delta - row_size/2
-			sw.style.background.size[2] = total_size + hero_widget_size + row_size/2
-
-			-- Little white lines at the top/bottom of columns
-			sw.style.glass_top.offset[2] = total_size + hero_widget_size - row_size/2 - size_delta + 1
-			sw.style.glass_bottom.offset[2] = -size_delta - row_size/2 + 1
-
-			-- Column borders
-			sw.style.frame.offset[2] = frame_off_modifier - size_delta - row_size/2
-			sw.style.frame.size[2] = total_size + hero_widget_size + row_size/2
-
-			sw.style.edge_fade.offset[2] = -modifier - size_delta
-			sw.style.edge_fade.size[2] = row_size
+-- Load scores into local variables at end of game
+mod:hook(EndViewStateScore, "_setup_player_scores", function(func, self, players_session_scores)
+	mod.stats_by_index = {}
+	local index = 1
+	for _, player_data in pairs(players_session_scores) do
+		for index, statData in pairs(mod.extended_stats) do
+			mod.recordedStats[i][statData.name] = player_data[statData.name]
 		end
-
-		-- Center scoreboard column
-		for i = 1, 3 do
-			self._widgets[i].offset[2] = size_delta
-		end
-		self._widgets[2].style.background.offset[2] = -size_delta - row_size/2
-		self._widgets[2].style.background.size[2] = total_size + ( hero_widget_size /2 ) + row_size/2
-
-		self._widgets[2].style.frame.offset[2] = - size_delta -row_size/2
-		self._widgets[2].style.frame.size[2] = total_size + ( hero_widget_size /2 ) + row_size/2
-
-		self._widgets[2].style.edge_fade.offset[2] = -modifier - size_delta
-		self._widgets[2].style.edge_fade.size[2] = size_delta
-
-		self._widgets[2].style.glass_top.offset[2] = total_size + ( hero_widget_size /2 ) - row_size/2 - size_delta + modifier
-		self._widgets[2].style.glass_bottom.offset[2] = modifier - size_delta -row_size/2
-	end)
-
-	return func(self, ...)
+		index = index + 1
+	end
+	return func(self, players_session_scores)
 end)
